@@ -22,7 +22,7 @@ const LoginScreen = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-  const signin = () => {
+  const signin = async () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => alert(error));

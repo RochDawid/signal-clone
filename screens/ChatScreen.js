@@ -1,16 +1,19 @@
 import React, { useLayoutEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { StatusBar } from "react-native";
-import { Platform } from "react-native";
-import { KeyboardAvoidingView } from "react-native";
-import { Text, View, StyleSheet } from "react-native";
-import { Avatar } from "react-native-elements";
 import {
+  Text,
+  View,
+  StyleSheet,
   ScrollView,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  SafeAreaView,
   TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+} from "react-native";
+import { Avatar } from "react-native-elements";
+import {} from "react-native-gesture-handler";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Keyboard } from "react-native";
 import { db, auth } from "../firebase";
@@ -65,6 +68,7 @@ const ChatScreen = ({ navigation, route }) => {
             rounded
             source={{
               uri:
+                messages[0]?.data.photoURL ||
                 "https://censur.es/wp-content/uploads/2019/03/default-avatar.png",
             }}
           />
@@ -91,7 +95,7 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, messages]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -103,7 +107,12 @@ const ChatScreen = ({ navigation, route }) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
+            <ScrollView
+              contentContainerStyle={{
+                paddingTop: 15,
+                flexDirection: "column-reverse",
+              }}
+            >
               {messages.map(({ id, data }) =>
                 data.email === auth.currentUser.email ? (
                   <View key={id} style={styles.sender}>
@@ -118,14 +127,16 @@ const ChatScreen = ({ navigation, route }) => {
                     <Text style={styles.senderText}>{data.message}</Text>
                   </View>
                 ) : (
-                  <View style={styles.reciever}>
+                  <View key={id} style={styles.reciever}>
                     <Avatar
                       rounded
                       position="absolute"
-                      bottom={30}
-                      right={-5}
+                      top={-10}
+                      left={-5}
                       size={24}
+                      source={{ uri: data.photoURL }}
                     />
+                    <Text style={styles.recieverName}>{data.displayName}</Text>
                     <Text style={styles.recieverText}>{data.message}</Text>
                   </View>
                 )
@@ -157,13 +168,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   reciever: {
-    padding: 15,
+    padding: 10,
     backgroundColor: "#2B68E6",
     alignSelf: "flex-start",
     borderRadius: 20,
-    marginRight: 15,
+    marginLeft: 15,
     maxWidth: "80%",
     position: "relative",
+    marginBottom: 10,
+  },
+  recieverName: {
+    left: 10,
+    paddingRight: 10,
+    fontSize: 12,
+    color: "white",
   },
   sender: {
     padding: 15,
@@ -171,14 +189,13 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     borderRadius: 20,
     marginRight: 15,
-    marginBottom: 20,
+    marginBottom: 10,
     maxWidth: "80%",
     position: "relative",
   },
   recieverText: {
     color: "white",
     fontWeight: "500",
-    marginBottom: 15,
   },
   senderText: {
     color: "black",

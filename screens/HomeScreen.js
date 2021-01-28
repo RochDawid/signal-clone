@@ -33,10 +33,10 @@ const HomeScreen = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Signal",
-      headerStyle: { backgroundColor: "#fff" },
-      headerTitleStyle: { color: "black" },
-      headerTintColor: "black",
+      title: "Signal by Dawid Roch",
+      headerStyle: { backgroundColor: "#2C6EBD" },
+      headerTitleStyle: { color: "white" },
+      headerTintColor: "white",
       headerLeft: () => (
         <View style={{ marginLeft: 20 }}>
           <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
@@ -54,13 +54,13 @@ const HomeScreen = ({ navigation }) => {
           }}
         >
           <TouchableOpacity activeOpacity={0.5}>
-            <AntDesign name="camerao" size={24} color="black" />
+            <AntDesign name="camerao" size={24} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("AddChat")}
             activeOpacity={0.5}
           >
-            <SimpleLineIcons name="pencil" size={24} color="black" />
+            <SimpleLineIcons name="pencil" size={24} color="white" />
           </TouchableOpacity>
         </View>
       ),

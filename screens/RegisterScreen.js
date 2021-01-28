@@ -21,12 +21,12 @@ const RegisterScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const register = () => {
+  const register = async () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
         authUser.user.updateProfile({
-          diplayName: name,
+          displayName: name,
           photoURL: imageURL || "https://censur.es/wp-content/uploads/2019/03/default-avatar.png"
         });
       })
