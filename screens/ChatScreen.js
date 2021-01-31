@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -36,7 +36,15 @@ const ChatScreen = ({ navigation, route }) => {
     }
 
     setInput("");
+
+    scrollDownFunc();
   };
+
+  const scrollDownDelayed = () => {
+    setTimeout(function(){
+      scrollDownFunc();
+    }, 40);
+  }
 
   useLayoutEffect(() => {
     const unsubscribe = db
@@ -55,6 +63,12 @@ const ChatScreen = ({ navigation, route }) => {
 
     return unsubscribe;
   }, [route]);
+
+  const scrollDown = useRef();
+
+  const scrollDownFunc = () => {
+    scrollDown.current.scrollToEnd();
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -94,6 +108,7 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
+    scrollDown.current.scrollToEnd();
   }, [navigation, messages]);
 
   return (
@@ -102,11 +117,11 @@ const ChatScreen = ({ navigation, route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
-        keyboardVerticalOffset={90}
+        keyboardVerticalOffset={85}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView
+            <ScrollView ref={scrollDown}
               contentContainerStyle={{
                 paddingTop: 15,
                 flexDirection: "column-reverse",
@@ -147,6 +162,7 @@ const ChatScreen = ({ navigation, route }) => {
                 onChangeText={(text) => setInput(text)}
                 placeholder="Enter message"
                 onSubmitEditing={sendMessage}
+                onFocus={scrollDownDelayed}
                 style={styles.textInput}
               />
               <TouchableOpacity onPress={sendMessage} activeOpacity={0.5}>
