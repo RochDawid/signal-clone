@@ -5,15 +5,17 @@ import {
   StatusBar,
   View,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import { Button, Input, Image } from "react-native-elements";
 import { auth } from "../firebase";
+import * as ImagePicker from 'expo-image-picker';
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [image, setImage] = useState("https://censur.es/wp-content/uploads/2019/03/default-avatar.png");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,10 +29,26 @@ const RegisterScreen = ({ navigation }) => {
       .then((authUser) => {
         authUser.user.updateProfile({
           displayName: name,
-          photoURL: imageURL || "https://censur.es/wp-content/uploads/2019/03/default-avatar.png"
+          photoURL: image,
         });
+        console.log(image);
       })
       .catch((error) => alert(error.message));
+  };
+
+  const selectImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      console.log(result.uri);
+    }
   };
 
   return (
@@ -66,13 +84,9 @@ const RegisterScreen = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <Input
-          placeholder="Profile picture URL (optional)"
-          type="text"
-          value={imageURL}
-          onChangeText={(text) => setImageURL(text)}
-          onSubmitEditing={register}
-        />
+        <TouchableOpacity style={styles.selectImage} onPress={selectImage}>
+          <Text style={{ color: "white", alignSelf: "center" }}>Select profile picture from gallery (optional)</Text>
+        </TouchableOpacity>
       </View>
       <Button containerStyle={styles.button} title="Register" onPress={register}/>
       <Button
@@ -103,4 +117,15 @@ const styles = StyleSheet.create({
     width: 200,
     marginTop: 10,
   },
+  selectImage: {
+    width: 310,
+    alignSelf: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 25,
+    color: "white",
+    backgroundColor: '#FF6C6C',
+    borderColor: "transparent"
+  }
 });

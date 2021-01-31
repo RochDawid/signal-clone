@@ -13,7 +13,6 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Avatar } from "react-native-elements";
-import {} from "react-native-gesture-handler";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { Keyboard } from "react-native";
 import { db, auth } from "../firebase";
@@ -26,7 +25,7 @@ const ChatScreen = ({ navigation, route }) => {
   const sendMessage = () => {
     Keyboard.dismiss();
 
-    if (input && input != "\n") {
+    if (input && input !== "\n") {
       db.collection("chats").doc(route.params.id).collection("messages").add({
         timestamp: firebase.default.firestore.FieldValue.serverTimestamp(),
         message: input,
@@ -68,7 +67,7 @@ const ChatScreen = ({ navigation, route }) => {
             rounded
             source={{
               uri:
-                messages[0]?.data.photoURL ||
+                messages[0]?.data?.photoURL ||
                 "https://censur.es/wp-content/uploads/2019/03/default-avatar.png",
             }}
           />
