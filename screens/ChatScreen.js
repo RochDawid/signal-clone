@@ -43,7 +43,7 @@ const ChatScreen = ({ navigation, route }) => {
   const scrollDownDelayed = () => {
     setTimeout(function(){
       scrollDownFunc();
-    }, 40);
+    }, 35);
   }
 
   useLayoutEffect(() => {
@@ -60,6 +60,8 @@ const ChatScreen = ({ navigation, route }) => {
           }))
         )
       );
+
+    scrollDownDelayed();
 
     return unsubscribe;
   }, [route]);
@@ -108,7 +110,7 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
-    scrollDown.current.scrollToEnd();
+    scrollDownFunc();
   }, [navigation, messages]);
 
   return (
